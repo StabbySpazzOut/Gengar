@@ -18,7 +18,7 @@ var api = function(dbot) {
                 }, callback);
             }
         },
-  
+
         //TODO(samstudio8) Merge Profiles
         'mergeProfile': function(server, nick, callback){
             console.log("mergeProfile not implemented");
@@ -87,7 +87,7 @@ var api = function(dbot) {
                 }
             });
         },
-        
+
         'setProperty': function(server, nick, field, value, callback){
             this.api.getProfile(server, nick, function(err, user, profile){
                 if(!err){

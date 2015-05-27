@@ -43,11 +43,11 @@ var pages = function(dbot) {
 
         '/profile/:connection': function(req, res) {
             dbot.api.profile.getAllProfiles(function(profiles){
+
                 var thumbnails = [];
                 _.each(profiles, function(profile){
                     var nick = dbot.api.users.getUser(profile.id, function(err, user){
                         if(user){
-
                             /*TODO(@tmenari / @samstudio8)
                              * if username has a quote array and no avatar:
                              *    search their quote array for a jpg, png, jpeg or gif
@@ -64,7 +64,11 @@ var pages = function(dbot) {
                     });
                 });
 
+
+
                 process.nextTick(function(){
+                    console.log('abc');
+                    console.log(thumbnails);
                     thumbnails.sort(function(a, b) {
                         var x = a.nick.toLowerCase();
                         var y = b.nick.toLowerCase();

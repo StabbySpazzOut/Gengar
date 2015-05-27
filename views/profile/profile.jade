@@ -3,7 +3,7 @@ extends ../layout
 block content
     script(type="text/javascript", src="http://ajax.aspnetcdn.com/ajax/jquery.dataTables/1.9.4/jquery.dataTables.min.js")
 
-    script
+    script.
         $(document).ready(function(){
             // Allowing forcing of string stats data to sort as numeric
             jQuery.extend( jQuery.fn.dataTableExt.oSort, {
@@ -11,11 +11,11 @@ block content
                     a = a.replace("\,", "");
                     return parseFloat( a );
                 },
-             
+
                 "forcenum-asc": function ( a, b ) {
                     return a - b;
                 },
-             
+
                 "forcenum-desc": function ( a, b ) {
                     return b - a;
                 }
@@ -44,9 +44,9 @@ block content
         small
           if(profile.tagline)
             "#{profile.tagline}"
-    div#backlink 
+    div#backlink
         a(href='/profile/'+connection) &laquo; Profiles
-   
+
     div.row.profile_row#profile_data
       div.span3
         if profile.avatar
@@ -56,7 +56,7 @@ block content
       div.span9
         h4 Bio
         p #{profile.bio}
-    
+
     hr
     h3 Channel Statistics
     div#profile_datatable
@@ -77,7 +77,7 @@ block content
                           td
                               a(href='/users/'+connection+'/'+encodeURIComponent(key))
                                 #{key}
-                              span 
+                              span
                               if chan.online
                                 if chan.active.active
                                   span.label.label-success.tip(data-original-title="#{chan.active.ago}", data-placement="right") Active

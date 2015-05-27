@@ -1,0 +1,3 @@
+{
+    "~dex": "~dex [pokemon]"
+}
