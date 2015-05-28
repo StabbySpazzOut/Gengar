@@ -5,14 +5,32 @@
  */
 
 var _ = require('underscore')._,
-	request = require('request');
+	request = require('request'),
+    Fuzzy = require('fuzzyset.js');
 
 var pokedex = function(dbot) {
 
 	this.ApiRoot = 'http://pokeapi.co/api/v1/';
 
+    this.getAllPokemon = function(callback) {
+        request.get(this.ApiRoot + 'pokedex/1', {
+            'json': true
+        }, function(err, res, body) {
+            var pokemon = [];
+
+            _.each(body.pokemon, function(item){
+                pokemon[item.name] = item.resource_uri.split('/')[3];
+            });
+
+            callback(err, pokemon);
+        });
+    };
+
+    this.getPokemonByName = function(name, callback) {
+
+    }
+
 	this.internalAPI = {
-    //code for internal api here
 	};
 
 	this.api = {
@@ -28,8 +46,10 @@ var pokedex = function(dbot) {
 	this.commands = {
     	'~dex': function(event) {
             var pokemon = event.input[1];
-
-            this.api.getPokemon(pokemon, function(err, data){
+            this.getAllPokemon(function(err, data) {
+                console.log(data);
+            });
+            this.api.getPokemon(pokemon, function(err, data) {
                 event.reply(data.name);
             });
         },
