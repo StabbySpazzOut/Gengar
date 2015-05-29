@@ -6,7 +6,9 @@
 
 var _ = require('underscore')._,
 	request = require('request'),
-    Fuzzy = require('fuzzyset.js');
+    Fuzzy = require('fuzzyset.js'),
+    pokeDict = [],
+    pokeFuzzy = {};
 
 var pokedex = function(dbot) {
 
@@ -27,7 +29,12 @@ var pokedex = function(dbot) {
     };
 
     this.getPokemonByName = function(name, callback) {
+        var dexName = pokeFuzzy.get(name)[0][1],
+            dexNumber = pokeDict[dexName];
 
+        this.api.getPokemon(dexNumber, function(err, data) {
+            callback(err, data);
+        });
     }
 
 	this.internalAPI = {
@@ -45,25 +52,50 @@ var pokedex = function(dbot) {
 
 	this.commands = {
     	'~dex': function(event) {
-            var pokemon = event.input[1];
-            this.getAllPokemon(function(err, data) {
-                console.log(data);
-            });
-            this.api.getPokemon(pokemon, function(err, data) {
-                event.reply(data.name);
+            var name = event.input[1];
+
+            this.getPokemonByName(name, function(err, data) {
+                var types = [];
+                _.each(data.types, function(item) { types.push(item.name.capitalize()) });
+
+                var evolutions = "I don't evolve into anything!";
+
+                if(data.evolutions.length > 0) {
+                    var evos = [];
+                    _.each(data.evolutions, function(item) {
+                        evos.push(item.to.capitalize()
+                            + " via " + (item.method == 'other' ? item.detail : item.method)
+                            + (item.level ? ' at level ' + item.level : ''));
+                    });
+                    evolutions = "I evolve into " + evos.join(' and ');
+                    evolutions = evolutions.replace('_', ' ');
+                }
+
+                event.reply(dbot.t('pokemon_data', {
+                    'name': data.name,
+                    'types': types.join(' and '),
+                    'evolutions': evolutions
+                }));
             });
         },
 	};
 
-    this.commands['~dex'].regex = [/^dex (\d+)/, 2];
+    this.commands['~dex'].regex = [/^dex ([a-zA-Z-]+)/, 2];
 
-	this.onLoad = function() {
-    //code for stuff to be done on load here
+    this.onLoad = function() {
+        this.getAllPokemon(function(err, data) {
+            pokeDict = data;
+            pokeFuzzy = new Fuzzy(_.keys(pokeDict));
+        });
     };
 
     this.onDestroy = function() {
     //stuff to be done on destroy here
     };
+
+    String.prototype.capitalize = function() {
+        return this.charAt(0).toUpperCase() + this.slice(1);
+    }
 
 };
 

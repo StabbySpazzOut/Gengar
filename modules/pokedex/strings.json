@@ -1,0 +1,8 @@
+{
+    "pokemon_data": {
+        "en": "I am {name}. I am a {types} pokemon! {evolutions}"
+    },
+    "pokemon_data_error": {
+        "en": "Something went wrong :( Example:'~foo bar'"
+    }
+}
