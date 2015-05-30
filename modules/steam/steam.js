@@ -37,9 +37,9 @@ var steam = function(dbot) {
                 'json': true
             }, function(err, res, body) {
                 if(body.response.success == 1) {
-                    callback(null, body.response.steamid); 
+                    callback(null, body.response.steamid);
                 } else if(body.response.success == 42) {
-                    callback('no_user', body.response.steamid); 
+                    callback('no_user', body.response.steamid);
                 }
             });
         },
@@ -85,7 +85,7 @@ var steam = function(dbot) {
                     'key': this.config.api_key,
                     'steamid': steamid,
                     'format': 'json',
-                    'include_appinfo': 1 
+                    'include_appinfo': 1
                 },
                 'json': true
             }, function(err, res, body) {
@@ -200,7 +200,7 @@ var steam = function(dbot) {
                                                 'snick': snick,
                                                 'sid': sid
                                             });
-                                            callback(false); 
+                                            callback(false);
                                         } else {
                                             event.reply('Unknown Steam ID');
                                             callback(true);
@@ -210,7 +210,7 @@ var steam = function(dbot) {
                                     if(!user) {
                                         event.reply('Unknown user.');
                                     } else {
-                                        event.reply(user.currentNick + ': Set a steam "vanity url" with "~set steam username"'); 
+                                        event.reply(user.currentNick + ': Set a steam "vanity url" with "~set steam username"');
                                     }
                                     callback(true);
                                 }
@@ -223,7 +223,7 @@ var steam = function(dbot) {
                     }
                 }.bind(this));
             } else {
-                event.reply(event.user + ': Set a steam "vanity url" with "~set steam username"'); 
+                event.reply(event.user + ': Set a steam "vanity url" with "~set steam username"');
                 callback(true);
             }
         }.bind(this);

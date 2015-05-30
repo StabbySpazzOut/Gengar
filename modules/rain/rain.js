@@ -1,6 +1,6 @@
 /**
  * Module Name: Rain
- * Description: Quietly judges your choice of climate. 
+ * Description: Quietly judges your choice of climate.
  */
 var request = require('request'),
     _ = require('underscore')._;
@@ -18,7 +18,7 @@ var rain = function(dbot) {
                     var obs = data["current_observation"];
                     if (obs) {
                         var precip = obs["precip_1hr_metric"];
-                        var score = 2 * Math.pow(precip,0.5); 
+                        var score = 2 * Math.pow(precip,0.5);
                         score = Math.ceil(score);
                         if (score > 10) { score = 11; }
                     } else {
