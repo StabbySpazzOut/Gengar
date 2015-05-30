@@ -26,9 +26,9 @@ var pugme = function(dbot) {
 
 	this.commands = {
     	'~pugme': function(event) {
-            this.api.getRandomPug(function(err, pug)) {
+            this.api.getRandomPug(function(err, pug) {
                 event.reply(pug);
-            }
+            });
         }
 	};
 
