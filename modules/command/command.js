@@ -13,7 +13,11 @@ var command = function(dbot) {
      */
     this.listener = function(event) {
         var commandName = event.params[0];
-        if(commandName.charAt(0) != this.config.commandPrefix || this.config.passiveMode == true) {
+        if(
+            commandName.charAt(0) != this.config.commandPrefix ||
+            commandName === this.config.commandPrefix ||
+            this.config.passiveMode == true
+        ) {
             return;
         }
         commandName = commandName.substring(1);
@@ -35,7 +39,7 @@ var command = function(dbot) {
                                 closestMatch = distance;
                                 winner = command;
                             }
-                        }); 
+                        });
 
                         if(closestMatch < 1) {
                             event.reply(commandName + ' not found. Did you mean ' + winner + '?');
@@ -57,14 +61,14 @@ var command = function(dbot) {
             } else {
                 return;
             }
-        } 
-       
+        }
+
         this.api.hasAccess(event, commandName, function(hasAccess) {
             dbot.api.ignore.isUserIgnoring(event.rUser, commandName, function(isIgnoring) {
                 dbot.api.ignore.isUserBanned(event.rUser, commandName, function(isBanned) {
                     if(isBanned) {
                         if(this.config.banOutput && commandName != this.config.commandPrefix) {
-                            event.reply(dbot.t('command_ban', {'user': event.user})); 
+                            event.reply(dbot.t('command_ban', {'user': event.user}));
                         }
                     } else if(!hasAccess) {
                         if(this.config.accessOutput) {
@@ -148,7 +152,7 @@ var command = function(dbot) {
                 return [].concat(dbot.access.admin(event), dbot.access.moderator(event), dbot.access.power_user(event),
                     _.chain(event.channel.nicks)
                      .filter(function(nick) {
-                         return nick.op == true || nick.voice == true; 
+                         return nick.op == true || nick.voice == true;
                       })
                       .pluck('name')
                       .value());
