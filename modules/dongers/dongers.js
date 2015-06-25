@@ -38,7 +38,7 @@ var dongers = function(dbot) {
 
                 callback(err, donger);
             });
-        };
+        }
 	};
 
 	this.commands = {
