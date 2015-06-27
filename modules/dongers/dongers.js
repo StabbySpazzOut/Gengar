@@ -9,27 +9,15 @@ var _ = require('underscore')._,
 
 var dongers = function(dbot) {
 
-	this.ApiRoot = 'https://www.kimonolabs.com/api/ondemand/cp2pfkco?apikey=Vx9YkKGUh98WleIBdKfhQI5st0oqhEid';
-
-    this.getRandomDongerByCategory = function(category, callback) {
-        request.get(this.ApiRoot + '&kimpath2=' + category, {
-            'json': true
-        }, function(err, res, body) {
-            var dongers = body.results.dongers;
-
-            var donger = _.sample(dongers).donger;
-
-            callback(err, donger);
-        });
-    };
-
+	this.ApiRoot = 'https://www.kimonolabs.com/api/';
 
 	this.internalAPI = {
 	};
 
 	this.api = {
         'getRandomDongerByCategory': function(category, callback) {
-            request.get(this.ApiRoot + '&kimpath2=' + category, {
+            request.get(this.ApiRoot + 'ondemand/cp2pfkco?apikey='
+                + this.config.api_key + '&kimpath2=' + category, {
                 'json': true
             }, function(err, res, body) {
                 var dongers = body.results.dongers;
@@ -39,6 +27,16 @@ var dongers = function(dbot) {
                 callback(err, donger);
             });
         }
+
+        'getCategories': function(callback) {
+            request.get(this.ApiRoot + 'bh28lyqg?apikey=' + this.config.api_key, {
+                'json': true
+            }, function(err, res, body) {
+                var categories = _.pluck(body.results.categories, 'text');
+
+                callback(err, categories);
+            });
+        }
 	};
 
 	this.commands = {
@@ -46,7 +44,15 @@ var dongers = function(dbot) {
             var category = event.input[1];
 
             this.api.getRandomDongerByCategory(category, function (err, donger) {
-                event.reply(donger);
+                if (donger) {
+                    event.reply(donger);
+                } else {
+                    this.api.getCategories(function(categories) {
+                        event.reply(dbot.t('no_donger', {
+                            'categories': categories.join(', ')
+                        }));
+                    });
+                }
             });
         },
 	};
