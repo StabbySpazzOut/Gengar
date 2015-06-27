@@ -16,12 +16,12 @@ var cheapshark = function(dbot) {
 
 	this.api = {
         'getGameByTitle': function(title, callback) {
-            request.get(this.ApiRoot + 'games?title=' + title + '&limit=1', {
+            request.get(this.ApiRoot + 'games?title=' + title + '&limit=3', {
                 'json': true
             }, function(err, res, body) {
-                var game = _.first(body);
+                var games = body;
 
-                callback(err, game);
+                callback(err, games);
             });
         }
 	};
@@ -30,11 +30,19 @@ var cheapshark = function(dbot) {
     	'~cheapshark': function(event) {
             var title = event.input[1];
 
-            this.api.getGameByTitle(title, function (err, game) {
-                event.reply('The best deal on ' + game.external
-                    + ' is $' + game.cheapest
-                    + ' at http://www.cheapshark.com/redirect?dealID='
-                    + game.cheapestDealID +' !');
+            this.api.getGameByTitle(title, function (err, games) {
+                if (_.isArray(games) && games.length > 0) {
+                    _.each(games, function(game) {
+                        event.reply(dbot.t('game', {
+                            'name': game.external,
+                            'price': '$' + game.cheapest + ' USD',
+                            'link': 'http://www.cheapshark.com/redirect?dealID='
+                                + game.cheapestDealID
+                        }));
+                    });
+                } else {
+                    event.reply(dbot.t('no_games'));
+                }
             });
         },
 	};

@@ -1,0 +1,8 @@
+{
+    "game": {
+        "en": "The best deal on {name} is {price} at {link}"
+    },
+    "no_games": {
+        "en": "No matching games found :("
+    }
+}
