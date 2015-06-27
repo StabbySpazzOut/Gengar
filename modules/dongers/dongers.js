@@ -31,7 +31,7 @@ var dongers = function(dbot) {
                 + this.config.api_key + '&kimpath2=' + category, {
                 'json': true
             }, function(err, res, body) {
-                if (_.has(body.results, 'dongers')) {
+                if (typeof body.results.dongers !== "undefined") {
                     var dongers = body.results.dongers;
 
                     var donger = _.sample(dongers).donger;
