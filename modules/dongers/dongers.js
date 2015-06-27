@@ -14,6 +14,16 @@ var dongers = function(dbot) {
 	this.internalAPI = {
 	};
 
+    this.getCategories = function(callback) {
+        request.get(this.ApiRoot + 'bh28lyqg?apikey=' + this.config.api_key, {
+            'json': true
+        }, function(err, res, body) {
+            var categories = _.pluck(body.results.categories, 'text');
+
+            callback(err, categories);
+        });
+    }
+
 	this.api = {
         'getRandomDongerByCategory': function(category, callback) {
             request.get(this.ApiRoot + 'ondemand/cp2pfkco?apikey='
@@ -30,16 +40,6 @@ var dongers = function(dbot) {
 
                 callback(err, donger);
             });
-        },
-
-        'getCategories': function(callback) {
-            request.get(this.ApiRoot + 'bh28lyqg?apikey=' + this.config.api_key, {
-                'json': true
-            }, function(err, res, body) {
-                var categories = _.pluck(body.results.categories, 'text');
-
-                callback(err, categories);
-            });
         }
 	};
 
@@ -51,7 +51,7 @@ var dongers = function(dbot) {
                 if (donger) {
                     event.reply(donger);
                 } else {
-                    this.api.getCategories(function(categories) {
+                    this.getCategories(function(categories) {
                         event.reply(dbot.t('no_donger', {
                             'categories': categories.join(', ')
                         }));
