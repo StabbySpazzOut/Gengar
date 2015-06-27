@@ -26,7 +26,7 @@ var dongers = function(dbot) {
 
                 callback(err, donger);
             });
-        }
+        },
 
         'getCategories': function(callback) {
             request.get(this.ApiRoot + 'bh28lyqg?apikey=' + this.config.api_key, {
