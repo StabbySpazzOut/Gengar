@@ -5,7 +5,8 @@
  */
 
 var _ = require('underscore')._,
-	request = require('request');
+	request = require('request'),
+    categories = [];
 
 var dongers = function(dbot) {
 
@@ -22,7 +23,7 @@ var dongers = function(dbot) {
 
             callback(err, categories);
         });
-    }
+    };
 
 	this.api = {
         'getRandomDongerByCategory': function(category, callback) {
@@ -51,11 +52,9 @@ var dongers = function(dbot) {
                 if (donger) {
                     event.reply(donger);
                 } else {
-                    this.getCategories(function(categories) {
-                        event.reply(dbot.t('no_donger', {
-                            'categories': categories.join(', ')
-                        }));
-                    });
+                    event.reply(dbot.t('no_donger', {
+                        'categories': categories.join(', ')
+                    }));
                 }
             });
         },
@@ -64,6 +63,9 @@ var dongers = function(dbot) {
     this.commands['~donger'].regex = [/^donger ([a-zA-Z-]+)/, 2];
 
     this.onLoad = function() {
+        this.getCategories(function(err, categories) {
+            categories = categories;
+        })
     };
 
     this.onDestroy = function() {
