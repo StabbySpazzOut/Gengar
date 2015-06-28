@@ -5,8 +5,7 @@
  */
 
 var _ = require('underscore')._,
-	request = require('request'),
-    categories = [];
+    request = require('request');
 
 var dongers = function(dbot) {
 
@@ -15,11 +14,15 @@ var dongers = function(dbot) {
 	this.internalAPI = {
 	};
 
+	this.categories = [];
+
     this.getCategories = function(callback) {
         request.get(this.ApiRoot + 'bh28lyqg?apikey=' + this.config.api_key, {
             'json': true
         }, function(err, res, body) {
-            var categories = _.pluck(body.results.categories, 'text');
+            var categories = _.map(body.results.categories, function(category) {
+                return category.category.text;
+            });
 
             callback(err, categories);
         });
@@ -31,7 +34,7 @@ var dongers = function(dbot) {
                 + this.config.api_key + '&kimpath2=' + category, {
                 'json': true
             }, function(err, res, body) {
-                if (typeof body.results !== "undefined") {
+                if (typeof body.results.dongers !== "undefined") {
                     var dongers = body.results.dongers;
 
                     var donger = _.sample(dongers).donger;
@@ -47,7 +50,6 @@ var dongers = function(dbot) {
 	this.commands = {
     	'~donger': function(event) {
             var category = event.input[1];
-
             this.api.getRandomDongerByCategory(category, function (err, donger) {
                 if (donger) {
                     event.reply(donger);
@@ -64,7 +66,7 @@ var dongers = function(dbot) {
 
     this.onLoad = function() {
         this.getCategories(function(err, categories) {
-            categories = categories;
+            this.categories = categories;
         })
     };
 
